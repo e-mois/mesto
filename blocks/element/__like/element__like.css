@@ -1,0 +1,19 @@
+.element__like {
+  width: 22px;
+  height: 19px;
+  background: none;
+  background-image: url(../../../image/heart.svg);
+  border: none;
+  outline: none;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.element__like:hover {
+  opacity: 0.5;
+}
+
+.element__like:visited {
+  background-image: url(../../../image/heart-active.svg);
+  opacity: 1;
+}
