@@ -7,8 +7,8 @@
   color: white;
   margin: 0;
   padding-top: 16px;
-  text-overflow: ellipsis; 
-  white-space: nowrap; 
+  text-overflow: ellipsis;
+  white-space: nowrap;
   overflow: hidden;
 }
 
