@@ -15,7 +15,7 @@
 }
 
 .profile__add-button:hover {
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 .profile__add-button:before {
@@ -49,5 +49,18 @@
     width: 88.125%;
     font-size: 35px;
   }
+
+  .profile__add-button:before {
+    height: 15px;
+    border: 1px solid white;
+    top: 13px;
+  }
+  
+  .profile__add-button:after {
+    height: 15px;
+    border: 1px solid white;
+    top: 13px;
+  }
+
 }
 

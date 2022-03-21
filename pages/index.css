@@ -1,5 +1,5 @@
 @import url(../vendor/normalize.css);
-@import url(../vendor/fonts.css);
+@import url(../fonts/fonts.css);
 @import url(../blocks/page/page.css);
 @import url(../blocks/content/content.css);
 @import url(../blocks/header/header.css);
@@ -12,7 +12,7 @@
 @import url(../blocks/profile/__name/profile__name.css);
 @import url(../blocks/profile/__about/profile__about.css);
 @import url(../blocks/profile/__add-button/profile__add-button.css);
-@import url(../blocks/elements/elements.css);
+@import url(../blocks/elements-list/elements-list.css);
 @import url(../blocks/element/element.css);
 @import url(../blocks/element/__image/element__image.css);
 @import url(../blocks/element/__info/element__info.css);
