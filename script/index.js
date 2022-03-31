@@ -5,7 +5,7 @@ let addPlaceButton = document.querySelector('.profile__add-button');
 let editButton = document.querySelector('.profile__edit');
 let closeButton = popup.querySelector('.popup__close-button');
 let closeButtonAddPlace = popupAddPlace.querySelector('.popup__close-button_pop_add');
-let closeButtonOpenedImage = popupOpenedImage.querySelector('.popup__close-button'); 
+let closeButtonOpenedImage = popupOpenedImage.querySelector('.popup-image__close-button'); 
 let textTitle = document.querySelector('.profile__name');
 let textAbout = document.querySelector('.profile__about');
 let formElement = popup.querySelector('.popup__container-form');
@@ -119,7 +119,6 @@ function addCardHandler(evt) {
   initialCards.unshift(newPlace);
   closePopup(popupAddPlace);
   createCard(initialCards[0]);
-  console.log(initialCards);
 }
 
 // Сохранение измененых данных
