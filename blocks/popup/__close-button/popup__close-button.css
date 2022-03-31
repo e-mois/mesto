@@ -47,12 +47,14 @@
   .popup__close-button:before {
     height: 28px;
     border-width: 1px;
+    top: -10px;
     left: 9px;
   }
   
   .popup__close-button:after {
     height: 28px;
     border-width: 1px;
+    top: -10px;
     left: 9px;
   }
 }
