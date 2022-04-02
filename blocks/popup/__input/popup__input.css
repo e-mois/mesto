@@ -12,11 +12,6 @@
   line-height: 1.21;
 }
 
-.popup__input:focus {
-  border: 0;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.8);
-}
-
 @media screen and (max-width: 767px) {
   .popup__input {
     width: 100%;

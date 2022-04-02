@@ -60,10 +60,9 @@ function deleteCard(evt) {
 }
 
 // Открытие попапа с картинкой
-function renderImagePopup(evt) {
-  const eventTarget = evt.target;
-  const imageLink = eventTarget.src;
-  const imageTitle = eventTarget.alt;
+function renderImagePopup(elem) {
+  const imageLink = elem.link;
+  const imageTitle = elem.name;
   
   popupOpenedImage.querySelector('.popup__image').src = imageLink;
   popupOpenedImage.querySelector('.popup__image').alt = imageTitle;
@@ -79,7 +78,7 @@ function createCard(elem) {
   newCardElement.querySelector('.element__title').textContent = elem.name;
   newCardElement.querySelector('.element__like').addEventListener('click', activeLike);
   newCardElement.querySelector('.element__trashbin').addEventListener('click', deleteCard);
-  newCardElement.querySelector('.element__link').addEventListener('click', renderImagePopup);
+  newCardElement.querySelector('.element__link').addEventListener('click', () => renderImagePopup(elem));
   return newCardElement;
 }
 
@@ -118,7 +117,7 @@ function addCardHandler(evt) {
   const newPlace = {name: cardNameInput.value, link: cardImgInput.value};
   addNewCard(newPlace);
   closePopup(popupNewPlace);
-  evt.target.reset();
+  formNewPlace.reset();
 }
 
 // Сохранение измененых данных
