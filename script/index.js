@@ -1,3 +1,4 @@
+const popupList = Array.from(document.querySelectorAll('.popup'));
 const popupProfile = document.querySelector('.popup_type_profile');
 const popupNewPlace = document.querySelector('.popup_type_add-place');
 const popupOpenedImage = document.querySelector('.popup_type_image');
@@ -147,6 +148,22 @@ buttonCloseNewCard.addEventListener('click', function () {
 buttonCloseOpenedImage.addEventListener('click', function () {
   closePopup(popupOpenedImage);
 });
+
+
+document.addEventListener('keyup', (evt) => {
+  const popupOpenedNow = document.querySelector('.popup_opened');
+  if (evt.key === 'Escape') {
+    closePopup(popupOpenedNow);
+  }
+})
+
+popupList.forEach((popup) => {
+  popup.addEventListener('click', (evt) => {
+    if (evt.target === evt.currentTarget) {
+      closePopup(popup);
+    }
+  })
+})
 
 formElement.addEventListener('submit', formSubmitHandler); 
 formNewPlace.addEventListener('submit', addCardHandler);
