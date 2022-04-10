@@ -94,14 +94,25 @@ initialCards.forEach((elem) => {
   addNewCard(elem);
 })
 
+// Обработчик нажатия ESC
+
+const pressEsc = (evt) => {
+  const popupOpenedNow = document.querySelector('.popup_opened');
+  if (evt.key === 'Escape') {
+    closePopup(popupOpenedNow);
+  }
+}
+
 // Закрытие при нажатии на крестик
-function closePopup(popup) {
+const closePopup = (popup) => {
   popup.classList.remove('popup_opened');
+  document.removeEventListener('keyup', pressEsc);
 }
 
 // Открытие попапа
-function openPopup(popup) {
+const openPopup = (popup) => {
   popup.classList.add('popup_opened');
+  document.addEventListener('keyup', pressEsc);
 }
 
 // Заполнение данными полей инпут в попапе профайл
@@ -148,14 +159,6 @@ buttonCloseNewCard.addEventListener('click', function () {
 buttonCloseOpenedImage.addEventListener('click', function () {
   closePopup(popupOpenedImage);
 });
-
-
-document.addEventListener('keyup', (evt) => {
-  const popupOpenedNow = document.querySelector('.popup_opened');
-  if (evt.key === 'Escape') {
-    closePopup(popupOpenedNow);
-  }
-})
 
 popupList.forEach((popup) => {
   popup.addEventListener('click', (evt) => {
