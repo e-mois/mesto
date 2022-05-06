@@ -1,11 +1,13 @@
-import { renderImagePopup } from "./index.js";
-
-const cardsContainer = document.querySelector('.elements-list');
-
 class Card {
-  constructor(cardItem, cardSelector) {
+  constructor(cardItem, cardTemplate, handleCardClick) {
     this._cardItem = cardItem;
-    this._cardSelector = cardSelector;
+    this._cardTemplate = cardTemplate;
+    this._handleCardClick = handleCardClick;
+    this.cardElement = this._cardTemplate.content.querySelector('.element').cloneNode(true);
+    this._buttonLike = this.cardElement.querySelector('.element__like');
+    this._buttonDelete = this.cardElement.querySelector('.element__trashbin');
+    this._cardTitle = this.cardElement.querySelector('.element__title');
+    this._cardImage = this.cardElement.querySelector('.element__image');
   }
 
     // Лайк
@@ -21,26 +23,21 @@ class Card {
     cardDeleted.remove();
   }
 
-    // Создание карточки
-  _createCard() {
-    const newCardElement = this._cardSelector
-            .content
-            .querySelector('.element')
-            .cloneNode(true);
-    const newCardImage = newCardElement.querySelector('.element__image');
-    newCardImage.src = this._cardItem.link;
-    newCardImage.alt = this._cardItem.name;
-    newCardElement.querySelector('.element__title').textContent = this._cardItem.name;
-    newCardElement.querySelector('.element__like').addEventListener('click', this._activeLike);
-    newCardElement.querySelector('.element__trashbin').addEventListener('click', this._deleteCard);
-    newCardElement.querySelector('.element__link').addEventListener('click', () => renderImagePopup(this._cardItem));
-    return newCardElement;
+  _setEventListeners() {
+    this._buttonLike.addEventListener('click', this._activeLike);
+    this._buttonDelete.addEventListener('click', this._deleteCard);
+    this._cardImage.addEventListener('click', () => {
+      this._handleCardClick(this._cardItem);
+    })
   }
 
-  // Добавление новой карточки на страницу
-  addNewCard() {
-    const newCard = this._createCard();
-    cardsContainer.prepend(newCard);
+    // Создание карточки
+  createCard() {
+    this._cardTitle.textContent = this._cardItem.name; 
+    this._cardImage.src = this._cardItem.link; 
+    this._cardImage.alt = this._cardItem.name;
+    this._setEventListeners();
+    return this.cardElement;
   }
 
 }
