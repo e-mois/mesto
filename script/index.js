@@ -56,11 +56,20 @@ const initialCards = [
   }
 ]; 
 
-const formEditProfileValidate = new FormValidator(objSelectors, formProfile);
-formEditProfileValidate.enableValidation();
+const formValidators = {}
 
-const formAddPlaceValidate = new FormValidator(objSelectors, formNewPlace);
-formAddPlaceValidate.enableValidation();
+const enableValidation = (config) => {
+  const formList = Array.from(document.querySelectorAll(config.formElement))
+  formList.forEach((formElement) => {
+    const validator = new FormValidator(config, formElement)
+    const formName = formElement.getAttribute('name')
+    formValidators[formName] = validator;
+    validator.enableValidation();
+  });
+};
+
+enableValidation(objSelectors);
+
 
 // Открытие попапа с картинкой
 const handleCardClick = (elem) => {
@@ -91,10 +100,25 @@ const pressEsc = (evt) => {
   }
 }
 
+// Проверка наличия формы в попапе
+const checkedForm = (popup) => {
+  return popup.querySelector('.popup__container-form');
+}
+
+
+// Очистка инпутов при закрытии попапа с формой
+const clearInput = (popup) => {
+  const form = checkedForm(popup);
+  if (form) {
+    form.reset();
+  }
+}
+
 // Закрытие при нажатии на крестик
 const closePopup = (popup) => {
   popup.classList.remove('popup_opened');
   document.removeEventListener('keyup', pressEsc);
+  clearInput(popup);
 }
 
 // Открытие попапа
@@ -118,8 +142,6 @@ function handleCardFormSubmit(evt) {
   const newCard = makeNewCard(newPlace, cardTemplate);
   cardsContainer.prepend(newCard);
   closePopup(popupNewPlace);
-  formNewPlace.reset();
-  formAddPlaceValidate.resetValidation();
 }
 
 // Сохранение измененых данных
@@ -135,23 +157,21 @@ function handleProfileFormSubmit (evt) {
 // Обработчики
 buttonEditProfile.addEventListener('click', function () {
   renderPopupProfile();
+  formValidators['EditProfile'].resetValidation();
 });
 
 buttonNewPlace.addEventListener('click', function () {
   openPopup(popupNewPlace);
+  formValidators['NewPlace'].resetValidation();
 });
 
 popupList.forEach((popup) => {
   popup.addEventListener('mousedown', (evt) => {
       if (evt.target.classList.contains('popup_opened')) {
           closePopup(popup)
-          formEditProfileValidate.resetValidation();
-          formAddPlaceValidate.resetValidation();
       }
       if (evt.target.classList.contains('popup__close-button')) {
         closePopup(popup)
-        formEditProfileValidate.resetValidation();
-        formAddPlaceValidate.resetValidation();
       }
   })
 })

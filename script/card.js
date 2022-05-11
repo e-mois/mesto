@@ -23,6 +23,7 @@ class Card {
     cardDeleted.remove();
   }
 
+  // Добавление обработчиков для карточки
   _setEventListeners() {
     this._buttonLike.addEventListener('click', this._activeLike);
     this._buttonDelete.addEventListener('click', this._deleteCard);
