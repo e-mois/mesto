@@ -1,6 +1,5 @@
 class Card {
-  constructor(cardItem, cardTemplate, handleCardClick) {
-    this._cardItem = cardItem;
+  constructor(cardTemplate, handleCardClick) {
     this._cardTemplate = cardTemplate;
     this._handleCardClick = handleCardClick;
     this.cardElement = this._cardTemplate.content.querySelector('.element').cloneNode(true);
@@ -24,20 +23,20 @@ class Card {
   }
 
   // Добавление обработчиков для карточки
-  _setEventListeners() {
+  _setEventListeners(data) {
     this._buttonLike.addEventListener('click', this._activeLike);
     this._buttonDelete.addEventListener('click', this._deleteCard);
     this._cardImage.addEventListener('click', () => {
-      this._handleCardClick(this._cardItem);
+      this._handleCardClick(data);
     })
   }
 
     // Создание карточки
-  createCard() {
-    this._cardTitle.textContent = this._cardItem.name; 
-    this._cardImage.src = this._cardItem.link; 
-    this._cardImage.alt = this._cardItem.name;
-    this._setEventListeners();
+  createCard(data) {
+    this._cardTitle.textContent = data.name; 
+    this._cardImage.src = data.link; 
+    this._cardImage.alt = data.name;
+    this._setEventListeners(data);
     return this.cardElement;
   }
 
