@@ -1,28 +1,20 @@
-import '../pages/index.css'
+import './index.css'
 
-import { Card } from "./Card.js";
-import { FormValidator } from "./FormValidator.js";
-import { Section } from "./Section.js";
-import { initialCards } from "./data.js";
-import { PopupWithImage } from "./PopupWithImage.js";
-import { PopupWithForm } from "./PopupWithForm.js";
-import { UserInfo } from "./UserInfo.js";
+import { Card } from "../components/Card.js";
+import { FormValidator } from "../components/FormValidator.js";
+import { Section } from "../components/Section.js";
+import { initialCards } from "../utils/utils.js";
+import { PopupWithImage } from "../components/PopupWithImage.js";
+import { PopupWithForm } from "../components/PopupWithForm.js";
+import { UserInfo } from "../components/UserInfo.js";
+
+import { objSelectors } from '../utils/utils.js';
 
 const popupProfile = document.querySelector('.popup_type_profile');
 const buttonNewPlace = document.querySelector('.profile__add-button');
 const buttonEditProfile = document.querySelector('.profile__edit');
 const inputName = popupProfile.querySelector('.popup__input_type_name');
 const inputAbout = popupProfile.querySelector('.popup__input_type_about');
-const cardTemplate = document.querySelector('#card');
-
-const objSelectors = {
-  formElement: '.popup__container-form',
-  inputElement: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible'
-}
 
 const formValidators = {}
 
@@ -38,15 +30,17 @@ const enableValidation = (config) => {
 
 enableValidation(objSelectors);
 
+const popupWithImage = new PopupWithImage('.popup_type_image');
+popupWithImage.setEventListeners();
+
 //Открытие попапа с картинкой
 const handleCardClick = (item) => {
-  const popupWithImage = new PopupWithImage(item, '.popup_type_image');
-  popupWithImage.open();
+  popupWithImage.open(item);
 }
 
 function makeNewCard(item) {
-  const newCard = new Card(cardTemplate, handleCardClick);
-  const card = newCard.createCard(item);
+  const newCard = new Card(item, '#card', handleCardClick);
+  const card = newCard.createCard();
   return card;
 }
 
@@ -67,22 +61,15 @@ const userInfo = new UserInfo({
 
 const popupNewPlace = new PopupWithForm({
   callbackFunction: (data) => {
-    const newCard = new Section({
-      data: data,
-      renderer: (item) => {
-        const card = makeNewCard(item);
-        newCard.addItem(card);
-      }
-    }, '.elements-list')
-    newCard.renderOneCard();
+    cardList._renderer(data);
     popupNewPlace.close();
   }
   }, '.popup_type_add-place');
 popupNewPlace.setEventListeners();
 
 const editProfilePopup = new PopupWithForm({
-  callbackFunction: () => {
-    userInfo.setUserInfo();
+  callbackFunction: (data) => {
+    userInfo.setUserInfo(data);
     editProfilePopup.close();
   }
 }, '.popup_type_profile'

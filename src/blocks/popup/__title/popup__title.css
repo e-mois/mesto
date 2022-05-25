@@ -3,13 +3,13 @@
   text-align: left;
   margin: 0;
   font-size: 24px;
-  padding-bottom: 24px;
+  padding-bottom: 31px;
 }
 
 @media screen and (max-width: 767px) {
   .popup__title {
     width: 88.125%;
     font-size: 18px;
-    padding-bottom: 45px;
+    padding-bottom: 62px;
   }  
 }

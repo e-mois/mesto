@@ -20,8 +20,4 @@ export class Section {
       this._renderer(item);
     });
   }
-
-  renderOneCard() {
-    this._renderer(this._renderedItems);
-  }
 }

@@ -11,18 +11,7 @@ export class UserInfo {
     return userInfoObj
   }
 
-  _getInputValue() {
-    const data = {};
-    const popupOpened = document.querySelector('.popup_opened');
-    console.log(popupOpened);
-    data['name'] = popupOpened.querySelector('.popup__input_type_name').value;
-    data['about'] = popupOpened.querySelector('.popup__input_type_about').value;
-    console.log(data)
-    return data;
-  }
-
-  setUserInfo(){
-    const data = this._getInputValue();
+  setUserInfo(data) {
     this._elemName.textContent = data.name;
     this._elemAbout.textContent = data.about;
   }
