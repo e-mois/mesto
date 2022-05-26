@@ -3,11 +3,11 @@ class Card {
     this._data = data;
     this._cardTemplate = document.querySelector(cardSelector);
     this._handleCardClick = handleCardClick;
-    this.cardElement = this._cardTemplate.content.querySelector('.element').cloneNode(true);
-    this._buttonLike = this.cardElement.querySelector('.element__like');
-    this._buttonDelete = this.cardElement.querySelector('.element__trashbin');
-    this._cardTitle = this.cardElement.querySelector('.element__title');
-    this._cardImage = this.cardElement.querySelector('.element__image');
+    this._cardElement = this._cardTemplate.content.querySelector('.element').cloneNode(true);
+    this._buttonLike = this._cardElement.querySelector('.element__like');
+    this._buttonDelete = this._cardElement.querySelector('.element__trashbin');
+    this._cardTitle = this._cardElement.querySelector('.element__title');
+    this._cardImage = this._cardElement.querySelector('.element__image');
   }
 
     // Лайк
@@ -38,7 +38,7 @@ class Card {
     this._cardImage.src = this._data.link; 
     this._cardImage.alt = this._data.name;
     this._setEventListeners();
-    return this.cardElement;
+    return this._cardElement;
   }
 
 }

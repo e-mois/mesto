@@ -61,7 +61,7 @@ const userInfo = new UserInfo({
 
 const popupNewPlace = new PopupWithForm({
   callbackFunction: (data) => {
-    cardList._renderer(data);
+    cardList.renderer(data);
     popupNewPlace.close();
   }
   }, '.popup_type_add-place');
