@@ -9,6 +9,7 @@
   right: 20px;
   cursor: pointer;
   z-index: 10;
+  visibility: hidden;
 }
 
 .element__trashbin:hover {
