@@ -5,14 +5,13 @@ export class PopupDelete extends Popup {
     super(selector)
     this.cardID = 0;
     this.targetElement = '';
-    this._popup = document.querySelector(selector);
-    this._submitButton = this._popup.querySelector('.popup__button');
+    this._submitButton = this.popup.querySelector('.popup__button');
     this._defaultTextButton = this._submitButton.textContent;
-    this._buttonApproveDelete = document.querySelector(selector).querySelector('.popup__button');
+    this._buttonApproveDelete = this.popup.querySelector('.popup__button');
     this._callbackFunction = callbackFunction;
   }
 
-  loadingSave(loading, text) {
+  renderLoading(loading, text) {
     if (loading) {
       this._submitButton.textContent = text;
     } else {

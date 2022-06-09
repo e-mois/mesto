@@ -8,17 +8,11 @@ import { PopupWithForm } from "../components/PopupWithForm.js";
 import { UserInfo } from "../components/UserInfo.js";
 import { Api } from "../components/Api.js"
 import { objSelectors } from '../utils/utils.js';
-import { avatar } from '../utils/constants.js';
 import { PopupDelete } from '../components/PopupDelete.js';
 
-const popupProfile = document.querySelector('.popup_type_profile');
 const buttonNewPlace = document.querySelector('.profile__add-button');
 const buttonEditProfile = document.querySelector('.profile__edit');
-const inputName = popupProfile.querySelector('.popup__input_type_name');
-const inputAbout = popupProfile.querySelector('.popup__input_type_about');
 const buttonChangeAvatar = document.querySelector('.profile__avatar-link')
-let userID;
-
 
 const api = new Api({
   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-42',
@@ -28,16 +22,37 @@ const api = new Api({
   }
 });
 
+Promise.all([api.getUser(), api.getCards()])
+// тут деструктурируете ответ от сервера, чтобы было понятнее, что пришло
+  .then(([userData, cardsList]) => {
+      // тут установка данных пользователя
+        userInfo.setUserInfo({
+          name: userData.name,
+          about: userData.about,
+        });
+        userInfo.setAvatar(userData);
+        userInfo.setID(userData);
+      // и тут отрисовка карточек
+        cards.renderedItems = cardsList;
+        cards.renderItems();
+  })
+  .catch(err => {
+    console.log(err)// тут ловим ошибку
+  });
+
 const popupChangeAvatar = new PopupWithForm({
   callbackFunction: (data) => {
-    console.log(data);
+    popupChangeAvatar.renderLoading(true, "Сохранение...");
     api.changeAvatar(data)
     .then((res) => {
-      avatar.src = res.avatar;
+      userInfo.setAvatar(res);
       popupChangeAvatar.close();
     })
     .catch((err) => {
       console.log(err);
+    })
+    .finally(() => {
+      popupChangeAvatar.renderLoading(false, '');
     });
   }
   }, '.popup_type_avatar');
@@ -46,41 +61,24 @@ popupChangeAvatar.setEventListeners();
 const cards = new Section({
   data: [],
   renderer: (item) => {
-    const card = makeNewCard(item);
-    cards.addItem(card);
+    const newCard = new Card(item, '#card', { handleCardClick, handleCardClickDelete, handleLike }, userInfo.userID);
+    const card = newCard.createCard();
+    return card;
   }
 }, '.elements-list');
 
-
-
-api.getUser()
-.then(data => {
-  userInfo.setUserInfo({
-    name: data.name,
-    about: data.about
-  });
-  avatar.src = data.avatar;
-  userID = data._id;
-});
-
-api.getCards()
-.then(data => {
-  cards.renderedItems = data;
-  cards.renderItems();
-})
-
 const appendNewCard = (popup, data) => {
-  popup.loadingSave(true, "Сохранение...")
+  popup.renderLoading(true, "Сохранение...");
   api.addNewCard(data)
   .then((data) => {
-    cards.renderer(data);
+    cards.addItem(data);
     popup.close();
   })
   .catch((err) => {
     console.log(err); // выведем ошибку в консоль
   })
   .finally(() => {
-    popup.loadingSave(false, '');
+    popup.renderLoading(false, '');
   })
 }
 
@@ -108,7 +106,7 @@ const handleCardClick = (item) => {
 
 const popupAproveDelete = new PopupDelete({
   callbackFunction: (cardID, target) => {
-    popupAproveDelete.loadingSave(true, "Удаление...")
+    popupAproveDelete.renderLoading(true, "Удаление...")
     api.deleteCard(cardID, target)
     .then(() => {
       target.remove();
@@ -118,7 +116,7 @@ const popupAproveDelete = new PopupDelete({
       console.log(err);
     })
     .finally(() => {
-      popupAproveDelete.loadingSave(false, '')
+      popupAproveDelete.renderLoading(false, '')
     })
   }
 }, '.popup_type_delete');
@@ -126,31 +124,40 @@ popupAproveDelete.setEventListeners();
 
 const getCardInfo = (popup, cardID, target) => {
   popup.cardID = cardID;
-  popup.targetElement = target;
+  popup.targetElement = target.closest('.element');
 }
 
-const handleCardClickDelete = (cardID, target) => {
-  getCardInfo(popupAproveDelete, cardID, target);
+const handleCardClickDelete = (card) => {
+  getCardInfo(popupAproveDelete, card.data._id, card._buttonDelete);
   popupAproveDelete.open();
 }
 
-const activateLike = (cardID) => {
-  return api.activateLike(cardID);
-}
-
-const disactivateLike = (cardID) => {
-  return api.disactivateLike(cardID);
-}
-
-function makeNewCard(item) {
-  const newCard = new Card(item, '#card', { handleCardClick, handleCardClickDelete, activateLike, disactivateLike }, userID);
-  const card = newCard.createCard();
-  return card;
+const handleLike = (card) => {
+  if (!card._buttonLike.classList.contains('element__like_type_active')) {
+    api.activateLike(card.data._id)
+    .then((res) => {
+      card._buttonLike.classList.toggle('element__like_type_active');
+      card._countLike.textContent = res.likes.length;
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  } else {
+    api.disactivateLike(card.data._id)
+    .then((res) => {
+      card._buttonLike.classList.toggle('element__like_type_active');
+      card._countLike.textContent = res.likes.length;
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
 }
 
 const userInfo = new UserInfo({
   selectorName: '.profile__name',
-  selectorAbout: '.profile__about'
+  selectorAbout: '.profile__about',
+  selectorAvatar: '.profile__avatar'
 })
 
 const popupNewPlace = new PopupWithForm({
@@ -162,7 +169,7 @@ popupNewPlace.setEventListeners();
 
 const editProfilePopup = new PopupWithForm({
   callbackFunction: (data) => {
-    editProfilePopup.loadingSave(true, 'Сохранение...')
+    editProfilePopup.renderLoading(true, 'Сохранение...')
     api.editProfile(data)
     .then((res) => {
       userInfo.setUserInfo({name: res.name, about: res.about});
@@ -172,7 +179,7 @@ const editProfilePopup = new PopupWithForm({
       console.log(err);
     })
     .finally(() => {
-      editProfilePopup.loadingSave(false, '');
+      editProfilePopup.renderLoading(false, '');
     });
   }
 }, '.popup_type_profile'
@@ -184,8 +191,7 @@ editProfilePopup.setEventListeners();
 // Обработчики
 buttonEditProfile.addEventListener('click', () => {
   const startInputValue = userInfo.getUserInfo();
-  inputName.value = startInputValue.name;
-  inputAbout.value = startInputValue.about;
+  editProfilePopup.setInputValues(startInputValue);
   editProfilePopup.open();
   formValidators['EditProfile'].resetValidation();
 });

@@ -3,12 +3,11 @@ import { Popup } from "./Popup.js";
 export class PopupWithForm extends Popup {
   constructor({ callbackFunction }, selector) {
     super(selector);
-    this._popup = document.querySelector(selector);
-    this._submitButton = this._popup.querySelector('.popup__button');
+    this._submitButton = this.popup.querySelector('.popup__button');
     this._defaultTextButton = this._submitButton.textContent;
     this._callbackFunction = callbackFunction;
 
-    this._formElement = document.querySelector(selector).querySelector('.popup__container-form');
+    this._formElement = this.popup.querySelector('.popup__container-form');
     this._inputList = this._formElement.querySelectorAll('.popup__input');
   }
 
@@ -20,12 +19,19 @@ export class PopupWithForm extends Popup {
     return inputDataObj
   }
 
-  loadingSave(loading, text) {
+  renderLoading(loading, text) {
     if (loading) {
       this._submitButton.textContent = text;
     } else {
       this._submitButton.textContent = this._defaultTextButton;
     }
+  }
+
+  setInputValues(data) {
+    this._inputList.forEach((input) => {
+      // тут вставляем в `value` инпута данные из объекта по атрибуту `name` этого инпута
+      input.value = data[input.name];
+    });
   }
 
   setEventListeners = () => {
