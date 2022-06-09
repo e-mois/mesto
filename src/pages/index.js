@@ -104,49 +104,47 @@ const handleCardClick = (item) => {
   popupWithImage.open(item);
 }
 
+const getCardInfo = (popup, card) => {
+  popup.cardID = card.getID();
+  popup.targetElement = card.buttonDelete.closest('.element');
+}
+
+const handleCardClickDelete = (card) => {
+  getCardInfo(popupAproveDelete, card);
+  popupAproveDelete.open();
+}
+
 const popupAproveDelete = new PopupDelete({
-  callbackFunction: (cardID, target) => {
-    popupAproveDelete.renderLoading(true, "Удаление...")
-    api.deleteCard(cardID, target)
+  callbackFunction: (popup) => {
+    popup.renderLoading(true, "Удаление...")
+    api.deleteCard(popup.cardID)
     .then(() => {
-      target.remove();
-      popupAproveDelete.close();
+      popup.targetElement.remove();
+      popup.close();
     })
     .catch((err) => {
       console.log(err);
     })
     .finally(() => {
-      popupAproveDelete.renderLoading(false, '')
+      popup.renderLoading(false, '')
     })
   }
 }, '.popup_type_delete');
 popupAproveDelete.setEventListeners();
 
-const getCardInfo = (popup, cardID, target) => {
-  popup.cardID = cardID;
-  popup.targetElement = target.closest('.element');
-}
-
-const handleCardClickDelete = (card) => {
-  getCardInfo(popupAproveDelete, card.data._id, card._buttonDelete);
-  popupAproveDelete.open();
-}
-
 const handleLike = (card) => {
-  if (!card._buttonLike.classList.contains('element__like_type_active')) {
-    api.activateLike(card.data._id)
+  if (!card.isLiked()) {
+    api.activateLike(card.getID())
     .then((res) => {
-      card._buttonLike.classList.toggle('element__like_type_active');
-      card._countLike.textContent = res.likes.length;
+      card.updateLike(res);
     })
     .catch((err) => {
       console.log(err);
     })
   } else {
-    api.disactivateLike(card.data._id)
+    api.disactivateLike(card.getID())
     .then((res) => {
-      card._buttonLike.classList.toggle('element__like_type_active');
-      card._countLike.textContent = res.likes.length;
+      card.updateLike(res);
     })
     .catch((err) => {
       console.log(err);
@@ -185,8 +183,6 @@ const editProfilePopup = new PopupWithForm({
 }, '.popup_type_profile'
 );
 editProfilePopup.setEventListeners();
-
-
 
 // Обработчики
 buttonEditProfile.addEventListener('click', () => {

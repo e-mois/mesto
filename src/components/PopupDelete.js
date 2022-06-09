@@ -7,7 +7,6 @@ export class PopupDelete extends Popup {
     this.targetElement = '';
     this._submitButton = this.popup.querySelector('.popup__button');
     this._defaultTextButton = this._submitButton.textContent;
-    this._buttonApproveDelete = this.popup.querySelector('.popup__button');
     this._callbackFunction = callbackFunction;
   }
 
@@ -20,8 +19,8 @@ export class PopupDelete extends Popup {
   }
 
   setEventListeners() {
-    this._buttonApproveDelete.addEventListener('click', () => {
-      this._callbackFunction(this.cardID, this.targetElement);
+    this._submitButton.addEventListener('click', () => {
+      this._callbackFunction(this);
     });
     super.setEventListeners();
   }
